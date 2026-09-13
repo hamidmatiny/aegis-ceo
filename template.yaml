@@ -51,13 +51,13 @@ credential_setup:
     setup_url: https://github.com/settings/personal-access-tokens/new
   - name: CORP_ORCHESTRATOR_API_URL
     title: corp-orchestrator base URL
-    description: Base URL for AEGIS's own production multi-agent system's Trajectory Report API (e.g. https://defenseaegis.org/admin/company/api). Used for /daily-trajectory-review.
+    description: Public API prefix for corp-orchestrator (production https://defenseaegis.org/api/corp). Skills append /v1/bev/trajectory and /v1/bev/summary.
     required: true
     secret: false
     format: text
   - name: CORP_ORCHESTRATOR_API_TOKEN
     title: corp-orchestrator read-only API token
-    description: Read-only token for corp-orchestrator's Trajectory Report API. Must be read-only — this agent never writes back into corp-orchestrator.
+    description: CORP_READONLY_TOKEN from the AEGIS VM .env — GET-only Bearer. Never use AEGIS_INTERNAL_TOKEN (that can approve IRREVERSIBLE actions).
     required: true
     secret: true
     format: secret

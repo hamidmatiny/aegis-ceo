@@ -55,7 +55,8 @@ Identify the first incomplete step in the current phase. Based on which step it 
 **For `corp_orchestrator_verified`:**
 - This is the one genuinely custom step — `corp-orchestrator`'s real Trajectory Report API shape isn't fully known yet. Ask Hamid to confirm (or point at) the real endpoint path under `/admin/company` on `defenseaegis.org`, then run a real test call:
   ```bash
-  curl -sf -H "Authorization: Bearer $CORP_ORCHESTRATOR_API_TOKEN" "$CORP_ORCHESTRATOR_API_URL/trajectory/latest"
+  curl -sf -H "Authorization: Bearer $CORP_ORCHESTRATOR_API_TOKEN" \
+    "$CORP_ORCHESTRATOR_API_URL/v1/bev/trajectory"
   ```
 - If the shape differs from what `/daily-trajectory-review` assumes, update that skill's Step 2 to match the real endpoint and response fields before marking this done.
 - After a real successful call, mark done.

@@ -123,8 +123,8 @@ Learn more at [ability.ai](https://ability.ai)
 
 Once deployed, publish **structured reports** so Hamid can see what you found without reading chat. At the end of any skill that yields a meaningful result — a trajectory summary, a CVE finding, a strategy recommendation — call the `mcp__trinity__report` MCP tool. The report appears on this agent's **Reports** tab and the fleet-wide **Operations → Reports** view.
 
-- **When:** at the end of `/daily-trajectory-review`, `/cve-watch`, `/github-pulse`, and `/strategy-brief` — not for conversational replies.
-- **`report_type`:** namespaced `lower_snake` segments joined by `.` — `^[a-z0-9_]+(\.[a-z0-9_]+)+$`. Use `aegis_ceo.trajectory_review`, `aegis_ceo.cve_finding`, `aegis_ceo.github_pulse`, `aegis_ceo.strategy_brief`.
+- **When:** at the end of `/daily-trajectory-review`, `/cve-watch`, `/github-pulse`, `/strategy-brief`, and `/handle-anomaly` runs — not for conversational replies.
+- **`report_type`:** namespaced `lower_snake` segments joined by `.` — `^[a-z0-9_]+(\.[a-z0-9_]+)+$`. Use `aegis_ceo.trajectory_review`, `aegis_ceo.cve_finding`, `aegis_ceo.github_pulse`, `aegis_ceo.strategy_brief`, `aegis_ceo.escalation_triage`.
 - **`title`:** one short line (≤300 chars). **`payload`:** a JSON **object** (≤5 MiB serialized — a top-level array or scalar is rejected).
 - **`display_hint`:** `kpi` for the trajectory review's headline numbers, `timeline` for CVE/GitHub activity feeds, `markdown` for the strategy brief's narrative recommendation, or omit to let Trinity infer. Pick deliberately — the hint drives how it renders.
 - **Read before you write:** call `mcp__trinity__list_reports` first (metadata only — filters `report_type`, `hours` ∈ {0,1,6,24,168,720}, `search`) to avoid duplicating or contradicting a report you already filed, then `mcp__trinity__get_report` with an id to diff this period against the last.
@@ -187,6 +187,7 @@ aegis-ceo/
   .claude/
     skills/
       daily-trajectory-review/SKILL.md
+      handle-anomaly/SKILL.md
       cve-watch/SKILL.md
       github-pulse/SKILL.md
       strategy-brief/SKILL.md

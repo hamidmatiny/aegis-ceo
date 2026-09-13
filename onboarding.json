@@ -1,0 +1,20 @@
+{
+  "phase": "local",
+  "started": "2026-09-12",
+  "steps": {
+    "local": {
+      "env_configured": { "done": false, "label": "Configure environment variables (.env) — GitHub token, corp-orchestrator API URL/token" },
+      "corp_orchestrator_verified": { "done": false, "label": "Confirm the real corp-orchestrator Trajectory Report API shape and verify a read-only test call succeeds" },
+      "first_skill_run": { "done": false, "label": "Run /daily-trajectory-review with real credentials and get a real (not placeholder) result" },
+      "plugins_installed": { "done": false, "label": "Install plugins (agent-dev, trinity, utilities)" }
+    },
+    "trinity": {
+      "onboarded": { "done": false, "label": "Deploy to Trinity (/trinity:onboard)" },
+      "first_remote_run": { "done": false, "label": "Run a skill remotely via mcp__trinity__chat_with_agent" }
+    },
+    "schedules": {
+      "schedules_configured": { "done": false, "label": "Enable the recommended schedules in template.yaml (all ship enabled: false by design)" },
+      "first_scheduled_run": { "done": false, "label": "Verify first scheduled execution completed" }
+    }
+  }
+}

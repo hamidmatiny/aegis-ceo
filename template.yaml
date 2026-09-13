@@ -1,0 +1,103 @@
+name: aegis-ceo
+display_name: AEGIS CEO
+description: |
+  Personal chief-executive assistant to Hamid for AEGIS, a real LLM/agent-security
+  company extended into AEGIS-for-SMB (defenseaegis.org). Runs day-to-day oversight —
+  real trajectory data, CVE/security watch, GitHub activity, and honest strategic
+  recommendations — so Hamid can check in periodically instead of managing every
+  detail himself. Read/advisory scope only; write access to production, Stripe, or
+  the repo is a deliberate later decision, never a default.
+avatar_prompt: |
+  A composed executive in their early 40s standing in a minimalist glass-walled office
+  at dusk, city lights blurred behind floor-to-ceiling windows. Dark charcoal suit with
+  no tie, sleeves impeccable, posture relaxed but alert. One hand rests on the back of
+  a chair; the other holds a slim tablet displaying a faint network-graph visualization
+  in cyan. Their expression is calm, direct, unimpressed by flash — the look of someone
+  who reads real numbers before verdicts. Cool blue-and-amber lighting, shallow depth
+  of field, photorealistic, cinematic corporate portrait style.
+resources:
+  cpu: "2"
+  memory: "4g"
+
+# Claude Code plugins this agent needs — DECLARED, not typed (trinity#1704). Trinity materializes
+# this as a committed ~/.trinity/plugins.yaml and re-installs it headlessly on every container
+# boot, so the deployed agent has them without anyone running /plugin install. Mirror CLAUDE.md.
+plugins:
+  marketplaces:
+    - name: abilityai
+      source: abilityai/abilities
+  installed:
+    - agent-dev@abilityai
+    - trinity@abilityai
+    - utilities@abilityai
+
+# What this agent needs, BY NAME ONLY — names-only is the frozen contract; never values.
+# Every ${VAR} used in .mcp.json.template must appear here or the agent HARD-fails
+# compatibility check T-015. This agent declares no MCP servers of its own, so these
+# are plain env vars its skills read directly (GitHub API calls, corp-orchestrator reads).
+credentials:
+  env_file: [GITHUB_TOKEN, CORP_ORCHESTRATOR_API_URL, CORP_ORCHESTRATOR_API_TOKEN, NVD_API_KEY]
+
+# Per-variable setup guidance (ent#128). DECORATES credentials: — it cannot declare a
+# name that isn't above (undeclared entries are dropped). Drives the platform's guided
+# checklist: GET /api/agents/{name}/credential-requirements (ent#127).
+credential_setup:
+  - name: GITHUB_TOKEN
+    title: GitHub read-only token for the AEGIS repo
+    description: Fine-grained PAT, Contents/Metadata read-only, scoped to github.codmatiny/aegis. Used for /github-pulse. No write scopes — this agent does not push to the repo.
+    required: true
+    secret: true
+    format: secret
+    setup_url: https://github.com/settings/personal-access-tokens/new
+  - name: CORP_ORCHESTRATOR_API_URL
+    title: corp-orchestrator base URL
+    description: Base URL for AEGIS's own production multi-agent system's Trajectory Report API (e.g. https://defenseaegis.org/admin/company/api). Used for /daily-trajectory-review.
+    required: true
+    secret: false
+    format: text
+  - name: CORP_ORCHESTRATOR_API_TOKEN
+    title: corp-orchestrator read-only API token
+    description: Read-only token for corp-orchestrator's Trajectory Report API. Must be read-only — this agent never writes back into corp-orchestrator.
+    required: true
+    secret: true
+    format: secret
+  - name: NVD_API_KEY
+    title: NVD (National Vulnerability Database) API key
+    description: Optional. Raises the NVD CVE API rate limit for /cve-watch. Without it, cve-watch still works but is rate-limited to the public tier.
+    required: false
+    secret: true
+    format: secret
+    setup_url: https://nvd.nist.gov/developers/request-an-api-key
+
+# Recommended schedules (design source of truth). Trinity materializes this block ON
+# AGENT CREATION, deduplicated by `name` — at most 20 entries, and NEVER re-applied on
+# recreate, so a schedule added here after deployment must be created with
+# create_agent_schedule (or reconciled by /trinity:onboard | /trinity:sync).
+# `enabled` is the recommended default and only a literal YAML true arms a schedule;
+# firing ALSO requires the agent's autonomy gate, which is OFF on every new agent.
+# timezone: UTC (canonical IANA). The container clock is UTC.
+schedules:
+  - name: Daily trajectory review
+    cron: "0 8 * * *"
+    timezone: UTC
+    message: "Run the daily trajectory review: pull corp-orchestrator's real MRR/signups/uptime/security data and summarize what changed."
+    purpose: Morning snapshot of real company numbers before Hamid's day starts
+    enabled: false
+  - name: CVE watch
+    cron: "0 */6 * * *"
+    timezone: UTC
+    message: "Run the CVE watch: scan for new CVEs and security news relevant to AEGIS's own stack and its customers' typical infrastructure."
+    purpose: Security news moves faster than a daily cadence allows
+    enabled: false
+  - name: GitHub pulse
+    cron: "30 7 * * *"
+    timezone: UTC
+    message: "Run the GitHub pulse check on github.codmatiny/aegis and summarize recent activity."
+    purpose: Dev-activity check ahead of the trajectory review
+    enabled: false
+  - name: Weekly strategy brief
+    cron: "0 9 * * 1"
+    timezone: UTC
+    message: "Run the strategy brief: synthesize the past week's trajectory, CVE, and GitHub findings into a prioritized, honest recommendation for Hamid."
+    purpose: Weekly synthesis and prioritization, not a daily churn
+    enabled: false

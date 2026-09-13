@@ -1,0 +1,66 @@
+title: "AEGIS CEO"
+refresh: 300
+updated: "2026-09-12T00:00:00Z"
+
+sections:
+  - title: "Status"
+    layout: grid
+    columns: 3
+    widgets:
+      - type: status
+        label: "Agent Status"
+        value: "Active"
+        color: green
+      - type: metric
+        label: "Last Trajectory Review"
+        value: "—"
+        description: "Updated by /update-dashboard"
+      - type: metric
+        label: "Open Escalations"
+        value: "0"
+        description: "From the latest /strategy-brief"
+
+  - title: "Company Trajectory"
+    layout: grid
+    columns: 2
+    widgets:
+      - type: metric
+        label: "MRR"
+        value: "—"
+        description: "From corp-orchestrator, real data only"
+      - type: metric
+        label: "Signups"
+        value: "—"
+      - type: metric
+        label: "Uptime (24h)"
+        value: "—"
+      - type: metric
+        label: "Open Security Findings"
+        value: "—"
+
+  - title: "Security & Dev"
+    layout: grid
+    columns: 2
+    widgets:
+      - type: metric
+        label: "New CVEs This Week"
+        value: "0"
+      - type: metric
+        label: "Open PRs / Issues"
+        value: "—"
+      - type: list
+        title: "Recent Findings"
+        items: []
+        max_items: 5
+
+  - title: "Quick Links"
+    layout: list
+    widgets:
+      - type: link
+        label: "AEGIS-for-SMB (live)"
+        url: "https://defenseaegis.org"
+        external: true
+      - type: link
+        label: "corp-orchestrator company view"
+        url: "https://defenseaegis.org/admin/company"
+        external: true

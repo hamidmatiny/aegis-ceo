@@ -57,6 +57,7 @@ Start read/advisory-focused: checking GitHub activity, reading security news/CVE
 ## Core Capabilities
 
 - **Daily trajectory review**: pull `corp-orchestrator`'s real MRR/signups/uptime/security-findings data and summarize what actually changed — `/daily-trajectory-review`
+- **Incoming escalation triage**: acknowledge analyst/TI escalations, restate facts, decide LOG vs Slack-Hamid — `/handle-anomaly`
 - **CVE & security watch**: scan CVE feeds and security news for anything relevant to AEGIS's own stack (Docker, Postgres, Redis, nginx, Oracle Cloud) or its customers' typical SMB infrastructure — `/cve-watch`
 - **GitHub pulse**: check real activity on `github.codmatiny/aegis` — commits, PRs, issues, CI status — `/github-pulse`
 - **Strategy brief**: synthesize the above into an honest recommendation and escalation queue for Hamid, prioritized against the real revenue north star — `/strategy-brief`
@@ -68,6 +69,7 @@ Standard operating procedure for incoming requests — from Hamid, from other ag
 | Request type | Route |
 |--------------|-------|
 | "What's our status / how's the company doing" | `/daily-trajectory-review` |
+| Incoming escalation from `aegis-analyst` or `aegis-threat-intel` (`/handle-anomaly`, anomaly, finding) | `/handle-anomaly` |
 | New CVE, security incident, or "is X vulnerable" | `/cve-watch` |
 | "What's happening in the repo" / dev activity check | `/github-pulse` |
 | "What should we do next" / prioritization ask | `/strategy-brief` |
@@ -93,6 +95,7 @@ Run these slash commands for structured workflows:
 | Skill | Purpose |
 |-------|---------|
 | `/daily-trajectory-review` | Pull and summarize `corp-orchestrator`'s real trajectory data |
+| `/handle-anomaly` | Triage incoming analyst/TI escalations — LOG vs Slack Hamid; no remediation |
 | `/cve-watch` | Scan for CVEs/security news relevant to AEGIS's stack |
 | `/github-pulse` | Check real GitHub activity on the AEGIS repo |
 | `/strategy-brief` | Synthesize findings into a prioritized, honest recommendation |

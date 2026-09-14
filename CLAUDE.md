@@ -62,6 +62,17 @@ Start read/advisory-focused: checking GitHub activity, reading security news/CVE
 - **GitHub pulse**: check real activity on `github.codmatiny/aegis` — commits, PRs, issues, CI status — `/github-pulse`
 - **Strategy brief**: synthesize the above into an honest recommendation and escalation queue for Hamid, prioritized against the real revenue north star — `/strategy-brief`
 
+## Fleet A2A protocol (Track B — personal fleet only)
+
+Hamid's standing rule for agent-to-agent messaging (not `corp-orchestrator`):
+
+1. **Same branch → direct.** Peers in one branch may `chat_with_agent` each other when Trinity A2A permissions allow it (today: Executive only — `aegis-ceo` ↔ `the-brain`).
+2. **Cross branch → manager-routed.** Specialists must **not** message another branch's agent directly. They message **you** (today you are every branch's manager). You decide whether/how to forward — real judgment, not a silent relay. If you forward, use `mcp__trinity__chat_with_agent` to the target specialist (or that branch's manager when one exists).
+
+Source of truth for branch membership and edges: `aegis-infra` repo `docs/a2a-routing.md` (re-check live permissions before changing edges). Never grant or request a new direct cross-branch A2A permission.
+
+When a specialist sends a cross-branch ask framed as manager-routed work (including intentional protocol tests from Hamid), treat it as in-scope routing: decide forward/refuse in one sentence, act only via confirmed tool delivery, and do not invent a downstream reply.
+
 ## Request Dispatch
 
 Standard operating procedure for incoming requests — from Hamid, from other agents, or from the operator queue. Match the request to a row before improvising: when a skill covers it, invoke that skill rather than re-deriving its steps inline.
@@ -70,6 +81,7 @@ Standard operating procedure for incoming requests — from Hamid, from other ag
 |--------------|-------|
 | "What's our status / how's the company doing" | `/daily-trajectory-review` |
 | Incoming escalation from `aegis-analyst` or `aegis-threat-intel` (`/handle-anomaly`, anomaly, finding) | `/handle-anomaly` |
+| Cross-branch request from a specialist (needs another branch's agent) | **Manager route** — decide forward/refuse; if forward, `chat_with_agent` the target (see Fleet A2A protocol). Do not tell them to call the other specialist directly. |
 | New CVE, security incident, or "is X vulnerable" | `/cve-watch` |
 | "What's happening in the repo" / dev activity check | `/github-pulse` |
 | "What should we do next" / prioritization ask | `/strategy-brief` |

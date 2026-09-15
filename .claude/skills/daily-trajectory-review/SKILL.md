@@ -53,20 +53,26 @@ Read `trajectory-history.json` in the agent root if it exists (create it on firs
 
 ### Step 4: Summarize
 
-Build a short, direct summary from the **real JSON only**:
+Build a short, direct summary from the **real JSON only**.
+
+**Labeling rule (non-negotiable):** Every figure from `corp-orchestrator` / BEV is **Track A — AEGIS product's internal mesh**, not Hamid's personal Trinity fleet (Track B). Never put Track A counts under a bare word like "Fleet" or "Agents" without that qualification — Hamid reads "Fleet" as Track B by default.
 
 ```
 ## Trajectory Review — [date]
 
-- CEO registered: [yes/no]
-- Agent status: [idle/running/…] · model [provider/model]
-- Latest CEO report: [status] — [first ~400 chars of result, or "none yet"]
-- Agents: [total] (idle/running/escalated/error from summary)
-- Tasks completed today: [n]
-- Open escalations: [n]
-- Signups (14d chart): [chart.status] · [n] day-points
+### Track A — AEGIS product (corp-orchestrator @ defenseaegis.org)
+- Internal CEO agent: [idle/running/…] · model [provider/model] · schedule [cron]
+- Latest internal CEO report: [status] — [first ~400 chars of result, or "none yet"]
+- AEGIS product's internal fleet (Track A, corp-orchestrator): [total] agents ([idle]/[running]/[escalated]/[error] from summary)
+- Tasks completed today (Track A): [n]
+- Open escalations (Track A): [n]
+- Signups (14d chart, Track A tenants table): [day → n …] · total [sum]
+- MRR / paying (Track A mrr_snapshot): [mrr_display] · paying_subscribers=[n] — quote formula; if identity is unknown say so
 
-[One honest sentence on the real state — no softening empty reports or $0.]
+### Track B — personal Trinity fleet (optional, only if you actually listed live agents this run)
+- Do **not** reuse Track A's total_agents here. If you include Track B, pull a real `list_agents` count and label it "Personal Trinity fleet (Track B)".
+
+[One honest sentence on the real state — no softening empty reports or $0. Do not treat Track A test/E2E tenants as organic growth without saying so.]
 ```
 
 If the CEO report body embeds MRR/uptime/security numbers, quote those; if not, say so explicitly rather than inventing them.
@@ -92,6 +98,28 @@ This is not optional once Trinity MCP is available — the point of the review i
 If `mcp__trinity__report` is available, call `mcp__trinity__list_reports` first (`report_type: aegis_ceo.trajectory_review`, `hours: 24`) to avoid duplicates, then publish a `kpi`-hinted report whose tile values come from the **same live JSON**, never placeholders.
 
 Skip silently if the tool isn't available.
+
+## Known failure modes
+
+### FM-0 — Bare "Fleet: N agents" reads as Track B (2026-09-15)
+
+**What went wrong:** Summary used `total_agents` from `/bev/summary` (corp-orchestrator's internal mesh — really 13 Track A agents) under a bare "Fleet:" label. Hamid's personal Trinity fleet is a different system (~7–8 agents). The number was real for Track A and wrong as a Track B headline.
+
+**Correct behavior:** Always prefix Track A stats as "AEGIS product's internal fleet (Track A, corp-orchestrator)". Never use unqualified "Fleet" / "Agents" for BEV counts.
+
+### FM-1 — Schedule shows Active but never runs
+
+**What went wrong (2026-09-14):** Trinity UI/DB had `Daily trajectory review` enabled with autonomy on; APScheduler listed the job, but `next_run` stayed stuck in the past and `schedule_executions` stayed empty. Cron never woke.
+
+**Correct behavior:** Before trusting a scheduled review, confirm `GET /api/agents/scheduler/status` shows this job's `next_run` **in the future**, and after a fire that `last_run_at` and an execution row exist. If overdue + no runs: disable→enable the schedule (or restart `trinity-scheduler`), then re-check. Do not declare the schedule healthy from the Schedules tab alone.
+
+### FM-2 — Cron fires but skill fails with revoked OAuth
+
+Premium `aegis-ceo` uses Claude subscription OAuth (`CLAUDE_CODE_OAUTH_TOKEN` from Trinity subscription `Hamid Matiny`). A real cron dispatch can still fail with `401 OAuth access token has been revoked`.
+
+**Not caused by:** running `claude setup-token` in another terminal (mint is additive; does not single-session-invalidate the fleet token).
+
+**Is caused by:** explicit Revoke of that token in claude.ai Claude Code settings (including "clean up old connections" after minting a personal token). Fix: mint a new token → upsert central subscription → restart `aegis-ceo` → verify chat + schedule trigger before revoking any old entry. See `aegis-infra` README gotcha "setup-token is additive".
 
 ## Outputs
 

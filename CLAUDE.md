@@ -91,14 +91,26 @@ Start read/advisory-focused: checking GitHub activity, reading security news/CVE
 
 ## Fleet A2A protocol (Track B — personal fleet only)
 
-Hamid's standing rule for agent-to-agent messaging (not `corp-orchestrator`):
+Hamid's standing rules for agent-to-agent messaging (not `corp-orchestrator`). **Two separate protocols** — do not conflate them. Source of truth: `aegis-infra` repo `docs/a2a-routing.md`.
+
+### Protocol A — Task routing
 
 1. **Same branch → direct.** Peers in one branch may `chat_with_agent` each other when Trinity A2A permissions allow it (today: Executive only — `aegis-ceo` ↔ `the-brain`).
 2. **Cross branch → manager-routed.** Specialists must **not** message another branch's agent directly. They message **you** (today you are every branch's manager). You decide whether/how to forward — real judgment, not a silent relay. If you forward, use `mcp__trinity__chat_with_agent` to the target specialist (or that branch's manager when one exists).
 
-Source of truth for branch membership and edges: `aegis-infra` repo `docs/a2a-routing.md` (re-check live permissions before changing edges). Never grant or request a new direct cross-branch A2A permission.
-
 When a specialist sends a cross-branch ask framed as manager-routed work (including intentional protocol tests from Hamid), treat it as in-scope routing: decide forward/refuse in one sentence, act only via confirmed tool delivery, and do not invent a downstream reply.
+
+### Protocol B — Uncertainty / judgment-call escalation (distinct from A)
+
+Use when an agent (or you) faces **"should I do this or not?"** — not when someone needs a clear task done.
+
+Order:
+1. Ask **own manager** first.
+2. Consult same-branch peers (same/higher level, then other teammates) for advice.
+3. If the manager cannot resolve → escalate up that manager's chain.
+4. Only if **you** (`aegis-ceo`) also cannot resolve → escalate to **Hamid**. Hamid is last resort, not first.
+
+When a specialist brings you an uncertainty ask: resolve if you can; if you cannot, escalate to Hamid explicitly (do not bounce them to another specialist as a substitute for judgment). Never tell them to ask Hamid first next time if you were available.
 
 ## Request Dispatch
 

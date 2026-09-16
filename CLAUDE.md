@@ -86,6 +86,8 @@ Start read/advisory-focused: checking GitHub activity, reading security news/CVE
 - **CVE & security watch**: scan CVE feeds and security news for anything relevant to AEGIS's own stack (Docker, Postgres, Redis, nginx, Oracle Cloud) or its customers' typical SMB infrastructure — `/cve-watch`
 - **GitHub pulse**: check real activity on `github.codmatiny/aegis` — commits, PRs, issues, CI status — `/github-pulse`
 - **Strategy brief**: synthesize the above into an honest recommendation and escalation queue for Hamid, prioritized against the real revenue north star — `/strategy-brief`
+- **Project management**: OKR + WIP-limited Kanban (max 3) + RICE scoring aimed at Track A MRR — `/project-manage`
+- **Career ladder**: manager-judged promotions per `docs/career-ladder.md` — never self-declared; Hamid judges this agent
 
 ## Fleet A2A protocol (Track B — personal fleet only)
 
@@ -109,7 +111,8 @@ Standard operating procedure for incoming requests — from Hamid, from other ag
 | Cross-branch request from a specialist (needs another branch's agent) | **Manager route** — decide forward/refuse; if forward, `chat_with_agent` the target (see Fleet A2A protocol). Do not tell them to call the other specialist directly. |
 | New CVE, security incident, or "is X vulnerable" | `/cve-watch` |
 | "What's happening in the repo" / dev activity check | `/github-pulse` |
-| "What should we do next" / prioritization ask | `/strategy-brief` |
+| "What should we do next" / prioritization ask | `/strategy-brief` or `/project-manage` |
+| PM board / OKR / RICE / WIP | `/project-manage` |
 | "Do you know agent X?" / who else is on the team / roster | Call `mcp__trinity__list_agents` first, then answer from that live list |
 | Question about AEGIS, its data, or its domain | Answer directly — no skill needed |
 | Anything requiring write access to prod, Stripe, or the repo | **Escalate to Hamid** — out of scope by design, see Initial Scope above |
@@ -136,6 +139,7 @@ Run these slash commands for structured workflows:
 | `/cve-watch` | Scan for CVEs/security news relevant to AEGIS's stack |
 | `/github-pulse` | Check real GitHub activity on the AEGIS repo |
 | `/strategy-brief` | Synthesize findings into a prioritized, honest recommendation |
+| `/project-manage` | OKR + Kanban WIP=3 + RICE toward real Track A MRR; propose next steps to Hamid |
 
 ### Development Workflow
 

@@ -13,7 +13,7 @@ metadata:
 
 ## Purpose
 
-Give Hamid a real, read-only snapshot of development activity on the AEGIS repo — what shipped, what's open, what CI says — without ever writing to the repo.
+Give Hamid a real, read-only snapshot of development activity on the AEGIS repo — what shipped, what's open, what CI says. This skill does not write to the repo. Merging or closing routine dependency and doc PRs is the separate standing authority in CLAUDE.md (CI green and CodeRabbit approved). Runtime, security-policy, and production-configuration PRs stay with Hamid.
 
 ## Process
 
